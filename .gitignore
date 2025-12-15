@@ -1,0 +1,112 @@
+# ===============================
+# Python
+# ===============================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.Python
+
+# ===============================
+# Virtual Environments
+# ===============================
+venv/
+env/
+ENV/
+.venv/
+customer_cat/
+*.env
+.env
+
+# ===============================
+# Jupyter Notebook
+# ===============================
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+
+# ===============================
+# Data (IMPORTANT)
+# ===============================
+# Raw / processed datasets (keep structure, not files)
+data/**/*.csv
+data/**/*.tsv
+data/**/*.parquet
+data/**/*.xlsx
+data/**/*.json
+
+# Allow a placeholder file to keep folders
+!data/**/.gitkeep
+
+# ===============================
+# Model Artifacts
+# ===============================
+models/
+*.pkl
+*.joblib
+*.h5
+*.onnx
+
+# ===============================
+# Logs & Outputs
+# ===============================
+logs/
+*.log
+outputs/
+results/
+reports/
+
+# ===============================
+# Experiment Tracking
+# ===============================
+mlruns/
+wandb/
+tensorboard/
+
+# ===============================
+# OS / Editor Junk
+# ===============================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===============================
+# VS Code
+# ===============================
+.vscode/
+!.vscode/extensions.json
+
+# ===============================
+# IDEs
+# ===============================
+.idea/
+*.iml
+
+# ===============================
+# Docker
+# ===============================
+__pycache__/
+*.pid
+
+# ===============================
+# Build / Packaging
+# ===============================
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ===============================
+# Secrets & Keys
+# ===============================
+*.pem
+*.key
+credentials.json
+secrets.json
+
+# ===============================
+# Misc
+# ===============================
+.cache/
+tmp/
+temp/
