@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Customer Categorizer</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+<div class="app">
+
+  <h1>🟣 Customer Personality Segmentation</h1>
+  <p class="subtitle">AI-based customer spending behavior analysis</p>
+
+  <form id="predictForm">
+
+    <!-- PERSONAL INFO -->
+    <div class="card">
+      <h3>👤 Personal Information</h3>
+      <div class="grid">
+        <input type="number" name="Age" placeholder="Age" required />
+
+        <select name="Education" required>
+          <option value="">Education</option>
+          <option value="Basic">Basic</option>
+          <option value="2n Cycle">2n Cycle</option>
+          <option value="Graduation">Graduation</option>
+          <option value="Master">Master</option>
+          <option value="PhD">PhD</option>
+        </select>
+
+        <select name="Marital_Status" required>
+          <option value="">Marital Status</option>
+          <option value="Single">Single</option>
+          <option value="Married">Married</option>
+          <option value="Divorced">Divorced</option>
+        </select>
+
+        <select name="Parental_Status" required>
+          <option value="">Parental Status</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+
+        <input type="number" name="Children" placeholder="Number of Children" required />
+      </div>
+    </div>
+
+    <!-- FINANCIAL INFO -->
+    <div class="card">
+      <h3>💰 Financial Information (Monthly INR)</h3>
+      <div class="grid">
+        <input type="number" name="Income" placeholder="Income (₹)" required />
+        <input type="number" name="Total_Spending" placeholder="Total Spending (₹)" required />
+        <input type="number" name="Days_as_Customer" placeholder="Days as Customer" required />
+        <input type="number" name="Recency" placeholder="Days Since Last Purchase" required />
+      </div>
+    </div>
+
+    <!-- SPENDING BY CATEGORY -->
+    <div class="card">
+      <h3>🛒 Spending by Category</h3>
+      <div class="grid">
+        <input type="number" name="Wines" placeholder="Wines Spend" />
+        <input type="number" name="Fruits" placeholder="Fruits Spend" />
+        <input type="number" name="Meat" placeholder="Meat Spend" />
+        <input type="number" name="Fish" placeholder="Fish Spend" />
+        <input type="number" name="Sweets" placeholder="Sweets Spend" />
+        <input type="number" name="Gold" placeholder="Gold Spend" />
+      </div>
+    </div>
+
+    <!-- PURCHASE BEHAVIOR -->
+    <div class="card">
+      <h3>📦 Purchase Behavior</h3>
+      <div class="grid">
+        <input type="number" name="Web" placeholder="Web Purchases" />
+        <input type="number" name="Catalog" placeholder="Catalog Purchases" />
+        <input type="number" name="Store" placeholder="Store Purchases" />
+        <input type="number" name="Discount_Purchases" placeholder="Discount Purchases" />
+        <input type="number" name="Total_Promo" placeholder="Promotions Used" />
+        <input type="number" name="NumWebVisitsMonth" placeholder="Web Visits / Month" />
+      </div>
+    </div>
+
+    <button type="submit">🔮 Predict Customer Segment</button>
+  </form>
+
+  <div id="result"></div>
+
+</div>
+
+<script>
+document.getElementById("predictForm").onsubmit = async (e) => {
+  e.preventDefault();
+
+  const data = Object.fromEntries(new FormData(e.target));
+
+  Object.keys(data).forEach(k => {
+    if (!isNaN(data[k])) data[k] = Number(data[k]);
+  });
+
+  const res = await fetch("/predict", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+
+  const json = await res.json();
+
+  document.getElementById("result").innerHTML = `
+    <div class="result-card">
+      <h2>🧠 Segment Identified</h2>
+      <p><b>${json.segment}</b></p>
+    </div>
+  `;
+};
+</script>
+
+</body>
+</html>

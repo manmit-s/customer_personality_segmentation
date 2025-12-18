@@ -2,6 +2,10 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import pandas as pd
 import joblib
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
+from fastapi import Request
 import os
 from pymongo import MongoClient
 from dotenv import load_dotenv
@@ -17,6 +21,34 @@ db = client[DB_NAME]
 collection = db[COLLECTION_NAME]
 
 app = FastAPI(title="Customer Categorizer API")
+# serve static files (CSS)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# templates directory
+templates = Jinja2Templates(directory="templates")
+
+
+# ---------- mapping for UI pusrposes ----------
+EDUCATION_MAP = {
+    "Basic": 0,
+    "2n Cycle": 1,
+    "Graduation": 2,
+    "Master": 3,
+    "PhD": 4
+}
+
+MARITAL_MAP = {
+    "Married": 1,
+    "Single": 0,
+    "Divorced": 0
+}
+
+PARENTAL_MAP = {
+    "Yes": 1,
+    "No": 0
+}
+
+
 
 # ---------- model load ----------
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -52,9 +84,9 @@ FINAL_FEATURES = [
 # ---------- input schema ----------
 class CustomerInput(BaseModel):
     Age: int
-    Education: int
-    Marital_Status: int
-    Parental_Status: int
+    Education: str
+    Marital_Status: str
+    Parental_Status: str
     Children: int
     Income: float
     Total_Spending: float
@@ -74,41 +106,57 @@ class CustomerInput(BaseModel):
     NumWebVisitsMonth: int
 
 
+
 @app.get("/")
 def home():
     return {"status": "API is running"}
+
+@app.get("/ui", response_class=HTMLResponse)
+def serve_ui(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.post("/predict")
 def predict(data: CustomerInput):
 
-    # convert input to dataframe
+    # raw input
     input_dict = data.dict()
 
-    # fix column names to match training
+    # rename columns FIRST
     rename_map = {
         "Marital_Status": "Marital Status",
         "Parental_Status": "Parental Status",
         "Discount_Purchases": "Discount Purchases",
         "Total_Promo": "Total Promo"
     }
-
     input_dict = {rename_map.get(k, k): v for k, v in input_dict.items()}
 
-    input_df = pd.DataFrame([input_dict])
+    # encode AFTER rename
+    input_dict["Education"] = EDUCATION_MAP[input_dict["Education"]]
+    input_dict["Marital Status"] = MARITAL_MAP[input_dict["Marital Status"]]
+    input_dict["Parental Status"] = PARENTAL_MAP[input_dict["Parental Status"]]
 
-    # enforce column order
+    # dataframe
+    input_df = pd.DataFrame([input_dict])
     input_df = input_df[FINAL_FEATURES]
 
     prediction = model.predict(input_df)
+    cluster_id = int(prediction[0])
 
     result = {
-    "input": input_dict,
-    "predicted_cluster": int(prediction[0])
+        "input": input_dict,
+        "predicted_cluster": cluster_id
     }
 
     collection.insert_one(result)
 
+    CLUSTER_MAP = {
+        0: "Highly Cautious Spender (Moderate income, least spending)",
+        1: "Average Spender (Moderate income, moderate spending)",
+        2: "Good Spender (High income, high spending)"
+    }
+
     return {
-        "cluster": result["predicted_cluster"]
+        "cluster_id": cluster_id,
+        "segment": CLUSTER_MAP[cluster_id]
     }
