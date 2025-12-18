@@ -3,6 +3,18 @@ from pydantic import BaseModel
 import pandas as pd
 import joblib
 import os
+from pymongo import MongoClient
+from dotenv import load_dotenv
+
+load_dotenv()
+
+MONGO_URI = os.getenv("MONGO_URI")
+DB_NAME = os.getenv("DB_NAME")
+COLLECTION_NAME = os.getenv("COLLECTION_NAME")
+
+client = MongoClient(MONGO_URI)
+db = client[DB_NAME]
+collection = db[COLLECTION_NAME]
 
 app = FastAPI(title="Customer Categorizer API")
 
@@ -90,6 +102,13 @@ def predict(data: CustomerInput):
 
     prediction = model.predict(input_df)
 
+    result = {
+    "input": input_dict,
+    "predicted_cluster": int(prediction[0])
+    }
+
+    collection.insert_one(result)
+
     return {
-        "cluster": int(prediction[0])
+        "cluster": result["predicted_cluster"]
     }
