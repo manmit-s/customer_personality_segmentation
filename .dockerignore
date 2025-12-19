@@ -1,0 +1,45 @@
+# --------------------
+# Python cache & junk
+# --------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --------------------
+# Virtual environments
+# --------------------
+.venv/
+venv/
+customer_cat/
+
+# --------------------
+# Notebooks & data (VERY HEAVY)
+# --------------------
+notebooks/
+*.ipynb
+*.csv
+
+# --------------------
+# IDE / OS files
+# --------------------
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# --------------------
+# Git & config
+# --------------------
+.git/
+.gitignore
+
+# --------------------
+# Secrets (IMPORTANT)
+# --------------------
+.env
+
+# --------------------
+# Misc
+# --------------------
+*.log

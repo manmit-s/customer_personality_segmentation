@@ -132,9 +132,13 @@ def predict(data: CustomerInput):
     input_dict = {rename_map.get(k, k): v for k, v in input_dict.items()}
 
     # encode AFTER rename
-    input_dict["Education"] = EDUCATION_MAP[input_dict["Education"]]
-    input_dict["Marital Status"] = MARITAL_MAP[input_dict["Marital Status"]]
-    input_dict["Parental Status"] = PARENTAL_MAP[input_dict["Parental Status"]]
+    try:
+        input_dict["Education"] = EDUCATION_MAP[input_dict["Education"]]
+        input_dict["Marital Status"] = MARITAL_MAP[input_dict["Marital Status"]]
+        input_dict["Parental Status"] = PARENTAL_MAP[input_dict["Parental Status"]]
+    except KeyError as e:
+        return {"error": f"Invalid categorical value: {str(e)}"}
+
 
     # dataframe
     input_df = pd.DataFrame([input_dict])
