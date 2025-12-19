@@ -66,3 +66,104 @@ The goal is to understand customer behavior and segment them into meaningful clu
 - Predictions are stored and retrievable via MongoDB.  
 
 ---
+# Customer Personality Segmentation - Usage Guide
+
+This project performs customer segmentation using unsupervised machine learning (Clustering) to help businesses understand their customer base and modify products based on specific needs.
+
+🚀 Quick Start Guide
+--------------------
+
+Follow these steps to set up the project on your local machine.
+
+### 1\. Clone the Repository
+
+Open your terminal and run:
+
+```
+git clone [https://github.com/manmit-s/customer_personality_segmentation.git](https://github.com/manmit-s/customer_personality_segmentation.git)
+cd customer_personality_segmentation
+
+```
+
+### 2\. Install Dependencies
+
+Ensure you have Python installed. Use the provided `requirements.txt` file to install all necessary libraries at once:
+
+```
+pip install -r requirements.txt
+
+```
+
+### 3\. Dataset Requirements
+
+The project uses the `marketing_campaign.csv` dataset.
+
+-   Ensure the file is in the root directory.
+
+-   If missing, you can download it from [Kaggle](https://www.kaggle.com/datasets/imakash3011/customer-personality-analysis "null").
+
+### 4\. Running the Analysis
+
+1.  Open your terminal in the project folder.
+
+2.  Launch Jupyter Notebook:
+
+    ```
+    jupyter notebook
+
+    ```
+
+3.  Open the `.ipynb` file (e.g., `Customer_Segmentation.ipynb`).
+
+4.  Execute the cells sequentially to see the data cleaning, PCA, and Clustering results.
+
+🛠 Project Workflow
+-------------------
+
+### 1\. Data Preprocessing
+
+-   **Cleaning:** Handling null values in the `Income` column.
+
+-   **Outliers:** Removing extreme values to prevent skewed clusters.
+
+-   **Feature Engineering:** Creating useful columns like `Age`, `Total_Spent`, and `Children_Count`.
+
+### 2\. Dimensionality Reduction (PCA)
+
+Since there are many features (Income, Age, Spending on various items), we use **Principal Component Analysis (PCA)** to reduce the number of variables while keeping the most important information.
+
+### 3\. Clustering (K-Means)
+
+-   **Elbow Method:** Used to find the optimal number of clusters (usually 3 or 4).
+
+-   **Segmentation:** Assigning each customer to a specific group.
+
+### 4\. Visualization & Profiling
+
+Visualizing the clusters to identify:
+
+-   **High-Value Customers:** High income, high spending.
+
+-   **Budget-Conscious:** Low spending, often younger or with more dependents.
+
+-   **Loyalists:** Long-term customers with consistent spending.
+
+🧪 Tech Stack
+-------------
+
+-   **Language:** Python
+
+-   **Environment:** Jupyter Notebook
+
+-   **Libraries:** 
+    - `Pandas` & `NumPy` (Data Manipulation)
+
+    -   `Matplotlib` & `Seaborn` (Visualization)
+
+    -   `Scikit-Learn` (Machine Learning & PCA)
+
+
+📄 License
+----------
+
+This project is open-source. Feel free to use and modify it for your own analysis!
